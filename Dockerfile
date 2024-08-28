@@ -108,7 +108,7 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 RUN apt update -q
-COPY --from=builder /tmp/packages /tmp/packages
+
 RUN apt-get install -y \
     libass9 \
     libavcodec-extra58 \
@@ -140,6 +140,6 @@ RUN apt-get install -y \
     libturbojpeg \
     librtmp1 \
     libfdk-aac2
-
+COPY --from=builder /tmp/packages /tmp/packages
 RUN dpkg -i /tmp/packages/*
 RUN ffmpeg -version
