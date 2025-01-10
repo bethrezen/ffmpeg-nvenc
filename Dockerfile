@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
 #FROM debian:11-slim
-FROM nvidia/cuda:12.6.0-devel-ubuntu22.04 as builder
+FROM nvidia/cuda:12.6.3-devel-ubuntu22.04 as builder
 #AS builder
 MAINTAINER Alexander Kozhevnikov
 #
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
 ENV DEBIAN_FRONTEND noninterac1tive
-ENV FFMPEG_VERSION 6.1.2
+ENV FFMPEG_VERSION 7.1
 #
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
@@ -33,7 +33,7 @@ RUN apt-get install -y \
 #RUN apt-get install -y libva-dev libdrm-dev
 #   
 #
-RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git \
+RUN git clone -b sdk/11.1  https://git.videolan.org/git/ffmpeg/nv-codec-headers.git \
 	&& cd nv-codec-headers \
 	&& make -j$(nproc) \
 	&& make install
@@ -72,6 +72,7 @@ RUN cd ffmpeg-${FFMPEG_VERSION} \
         --enable-pthreads \
         --enable-nvenc \
         --enable-cuda \
+        --enable-cuda-nvcc --enable-cuda-llvm \
         --enable-cuvid \
         --enable-libnpp \
         --disable-stripping \
